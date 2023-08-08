@@ -26,7 +26,7 @@ public class Controller {
         return new ResponseEntity<>(employeeService.getAllEmployees(),HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "{employeeId}")
+    @DeleteMapping(path = "delete/{employeeId}")
     public void delete(@PathVariable("employeeId") Long employeeId){
         employeeService.deleteEmployeeById(employeeId);
 
