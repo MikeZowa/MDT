@@ -1,4 +1,15 @@
 package co.zw.company.employeemanager.dto;
 
-public record EmployeeDto(String fullname,String position) {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class EmployeeDto {
+    private String fullname;
+    private String position;
 }
