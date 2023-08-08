@@ -6,10 +6,7 @@ import co.zw.company.employeemanager.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +24,11 @@ public class Controller {
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
         return new ResponseEntity<>(employeeService.getAllEmployees(),HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "{employeeId}")
+    public void delete(@PathVariable("employeeId") Long employeeId){
+        employeeService.deleteEmployeeById(employeeId);
+
     }
 }

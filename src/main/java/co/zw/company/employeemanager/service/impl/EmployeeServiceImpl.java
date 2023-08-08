@@ -29,10 +29,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .map(employeeMapper
                 ).collect(Collectors.toList());
     }
-    public void deleteEmployeet(Long employeeId) {
+    public void deleteEmployeeById(Long employeeId) {
         boolean exist=employeeRepository.existsById(employeeId);
         if(!exist){
-            throw new IllegalStateException("Student with id "+employeeId+" not found");
+            throw new IllegalStateException("Employee with id "+employeeId+" not found");
         }
         employeeRepository.deleteById(employeeId);
     }
