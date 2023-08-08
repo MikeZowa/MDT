@@ -112,9 +112,9 @@ public class EmployeeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(updatedEmployee)))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.fullName").value("Rowen Mariri"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.position").value("Engineer"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.uniqueKey").value(5678));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fullName").value(updatedEmployee.getFullName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.position").value(updatedEmployee.getPosition()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.uniqueKey").value(updatedEmployee.getUniqueKey()));
 
         // Verify that the employeeService updateEmployee method was called with the expected parameters
         Mockito.verify(employeeService, Mockito.times(1))
