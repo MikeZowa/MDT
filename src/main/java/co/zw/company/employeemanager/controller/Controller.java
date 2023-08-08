@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api")
+@RequestMapping("/api/")
 public class Controller {
 
     private final EmployeeService employeeService;
@@ -21,7 +21,7 @@ public class Controller {
     public ResponseEntity<Employee> saveEmployee(@RequestBody Employee employee){
         return new ResponseEntity<>(employeeService.createNewEmployee(employee), HttpStatus.CREATED);   }
 
-    @RequestMapping(value = "get", method = RequestMethod.GET)
+    @GetMapping("employees")
     public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
         return new ResponseEntity<>(employeeService.getAllEmployees(),HttpStatus.OK);
     }
