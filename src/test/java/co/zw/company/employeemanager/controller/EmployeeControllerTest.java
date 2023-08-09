@@ -26,14 +26,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,7 +66,7 @@ public class EmployeeControllerTest {
     public void givenEmployee_whenCreateEmployee_shouldReturnCreatedEmployee() throws Exception{
 
         given(employeeService.createNewEmployee(any(Employee.class))).willReturn(employee);
-        mockMvc.perform(post("/api/save").
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/save").
                         contentType(MediaType.APPLICATION_JSON_VALUE).
                         content(objectMapper.writeValueAsString(employee)))
                 .andExpect(status().isCreated());
@@ -153,15 +151,17 @@ public class EmployeeControllerTest {
     }
 
     @Test
-    public void whenNullValue_thenReturns401() throws Exception {
-        employee = new Employee();
-        employee.setId(1L);
-        employee.setFullName(null);
-        employee.setPosition("King");
-        employee.setUniqueKey(1234);
+    public void testInvalidEmployeeRequest() throws Exception {
+        // Create an invalid Employee object
+        Employee employee = new Employee();
+        employee.setFullName(""); // Invalid: empty full name
+        employee.setPosition(null); // Invalid: null position
+        employee.setUniqueKey(-1L); // Invalid: negative unique key
 
-        mockMvc.perform(post("/api/save")
-                        .content(objectMapper.writeValueAsString(employee)))
-                .andExpect(status().isUnsupportedMediaType());
+        given(employeeService.createNewEmployee(any(Employee.class))).willReturn(employee);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/save").
+                        contentType(MediaType.APPLICATION_JSON_VALUE).
+                        content(objectMapper.writeValueAsString(employee)))
+                .andExpect(status().isBadRequest());
     }
 }
