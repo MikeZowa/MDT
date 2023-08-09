@@ -43,4 +43,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             return null; // Or throw an exception, depending on your requirements
         }
     }
+    public void deleteEmployeeById(Long employeeId) {
+        boolean exist=employeeRepository.existsById(employeeId);
+        if(!exist){
+            throw new IllegalStateException("Employee with id "+employeeId+" not found");
+        }
+        employeeRepository.deleteById(employeeId);
+    }
 }

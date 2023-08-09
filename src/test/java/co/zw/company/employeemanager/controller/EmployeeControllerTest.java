@@ -21,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -29,7 +30,9 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -135,5 +138,16 @@ public class EmployeeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].fullname").value("TestUser"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].position").value("Developer"));
+    }
+
+   @Test
+    public void EmployeeController_DeleteEmployer_ReturnString() throws Exception {
+        long employeeId = 1;
+        doNothing().when(employeeService).deleteEmployeeById(employeeId);
+
+        ResultActions response = mockMvc.perform(delete("/api/delete/1")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
