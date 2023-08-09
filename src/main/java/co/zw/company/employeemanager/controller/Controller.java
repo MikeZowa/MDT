@@ -1,8 +1,10 @@
 package co.zw.company.employeemanager.controller;
 
+import co.zw.company.employeemanager.customexception.BadArgumentsException;
 import co.zw.company.employeemanager.dto.EmployeeDto;
 import co.zw.company.employeemanager.model.Employee;
 import co.zw.company.employeemanager.service.EmployeeService;
+import com.sun.jdi.InternalException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,15 @@ public class Controller {
     @DeleteMapping(path = "delete/{employeeId}")
     public void delete(@PathVariable("employeeId") Long employeeId){
         employeeService.deleteEmployeeById(employeeId);
+
+    }
+
+
+    @GetMapping("/exception/{exception_id}")
+    public void getSpecificException(@PathVariable("exception_id") String pException) {
+        if("bad_arguments".equals(pException)) {
+            throw new BadArgumentsException("bad arguments");
+        }
 
     }
 }

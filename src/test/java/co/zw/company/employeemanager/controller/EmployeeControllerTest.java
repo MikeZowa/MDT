@@ -1,21 +1,19 @@
 package co.zw.company.employeemanager.controller;
 
+import co.zw.company.employeemanager.customexception.BadArgumentsException;
 import co.zw.company.employeemanager.dto.EmployeeDto;
 import co.zw.company.employeemanager.model.Employee;
 import co.zw.company.employeemanager.repository.EmployeeRepository;
 import co.zw.company.employeemanager.service.EmployeeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -27,6 +25,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -164,4 +164,18 @@ public class EmployeeControllerTest {
                         content(objectMapper.writeValueAsString(employee)))
                 .andExpect(status().isBadRequest());
     }
+
+
+    @Test
+    public void givenBadArguments_whenGetSpecificException_thenBadRequest() throws Exception {
+        String exceptionParam = "bad_arguments";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/exception/{exception_id}", exceptionParam)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadArgumentsException))
+                .andExpect(result -> assertEquals("bad arguments", result.getResolvedException().getMessage()));
+    }
+
+
 }
