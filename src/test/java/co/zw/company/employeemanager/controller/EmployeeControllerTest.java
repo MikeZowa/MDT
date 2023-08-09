@@ -1,5 +1,6 @@
 package co.zw.company.employeemanager.controller;
 
+import co.zw.company.employeemanager.dto.EmployeeDto;
 import co.zw.company.employeemanager.model.Employee;
 import co.zw.company.employeemanager.repository.EmployeeRepository;
 import co.zw.company.employeemanager.service.EmployeeService;
@@ -23,10 +24,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -104,7 +107,7 @@ public class EmployeeControllerTest {
         updatedEmployee.setUniqueKey(5678);
 
         // Mock the behavior of the employeeService updateEmployee method
-        Mockito.when(employeeService.updateEmployee(Mockito.eq(1L), Mockito.any(Employee.class)))
+        when(employeeService.updateEmployee(Mockito.eq(1L), Mockito.any(Employee.class)))
                 .thenReturn(updatedEmployee);
 
         // Perform the PUT request to update the employee
@@ -119,5 +122,18 @@ public class EmployeeControllerTest {
         // Verify that the employeeService updateEmployee method was called with the expected parameters
         Mockito.verify(employeeService, Mockito.times(1))
                 .updateEmployee(Mockito.eq(1L), Mockito.any(Employee.class));
+    }
+
+    @Test
+    public void shouldReturnListOfAllEmployees() throws Exception {
+        when(employeeService.getAllEmployees())
+                .thenReturn(List.of(new EmployeeDto("TestUser", "Developer")));
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/api/get"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].fullname").value("TestUser"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].position").value("Developer"));
     }
 }
