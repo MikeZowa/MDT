@@ -9,5 +9,6 @@ public interface EmployeeService {
     Employee createNewEmployee(Employee employee);
 
     List<EmployeeDto> getAllEmployees();
-    public void deleteEmployeeById(Long employeeId);
+
+    Employee updateEmployee(Long id, Employee updatedEmployee);
 }

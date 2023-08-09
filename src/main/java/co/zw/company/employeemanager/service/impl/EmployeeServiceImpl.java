@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,11 +30,17 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .map(employeeMapper
                 ).collect(Collectors.toList());
     }
-    public void deleteEmployeeById(Long employeeId) {
-        boolean exist=employeeRepository.existsById(employeeId);
-        if(!exist){
-            throw new IllegalStateException("Employee with id "+employeeId+" not found");
+
+    public Employee updateEmployee(Long id, Employee updatedEmployee) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        if (optionalEmployee.isPresent()) {
+            Employee existingEmployee = optionalEmployee.get();
+            existingEmployee.setFullName(updatedEmployee.getFullName());
+            existingEmployee.setPosition(updatedEmployee.getPosition());
+            existingEmployee.setUniqueKey(updatedEmployee.getUniqueKey());
+            return employeeRepository.save(existingEmployee);
+        } else {
+            return null; // Or throw an exception, depending on your requirements
         }
-        employeeRepository.deleteById(employeeId);
     }
 }
