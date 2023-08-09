@@ -33,6 +33,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,7 +68,7 @@ public class EmployeeControllerTest {
     public void givenEmployee_whenCreateEmployee_shouldReturnCreatedEmployee() throws Exception{
 
         given(employeeService.createNewEmployee(any(Employee.class))).willReturn(employee);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/save").
+        mockMvc.perform(post("/api/save").
                         contentType(MediaType.APPLICATION_JSON_VALUE).
                         content(objectMapper.writeValueAsString(employee)))
                 .andExpect(status().isCreated());
@@ -149,5 +150,18 @@ public class EmployeeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void whenNullValue_thenReturns401() throws Exception {
+        employee = new Employee();
+        employee.setId(1L);
+        employee.setFullName(null);
+        employee.setPosition("King");
+        employee.setUniqueKey(1234);
+
+        mockMvc.perform(post("/api/save")
+                        .content(objectMapper.writeValueAsString(employee)))
+                .andExpect(status().isUnsupportedMediaType());
     }
 }
