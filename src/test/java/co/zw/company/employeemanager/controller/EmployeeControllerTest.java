@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -149,5 +148,20 @@ public class EmployeeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testInvalidEmployeeRequest() throws Exception {
+        // Create an invalid Employee object
+        Employee employee = new Employee();
+        employee.setFullName(""); // Invalid: empty full name
+        employee.setPosition(null); // Invalid: null position
+        employee.setUniqueKey(-1L); // Invalid: negative unique key
+
+        given(employeeService.createNewEmployee(any(Employee.class))).willReturn(employee);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/save").
+                        contentType(MediaType.APPLICATION_JSON_VALUE).
+                        content(objectMapper.writeValueAsString(employee)))
+                .andExpect(status().isBadRequest());
     }
 }
